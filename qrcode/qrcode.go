@@ -1,6 +1,7 @@
 package qrcode
 
-// #cgo LDFLAGS: -lzbar -lpng -ljpeg -lz -lrt -lm -pthread
+// #cgo linux LDFLAGS: -lzbar -lpng -ljpeg -lz -lrt -lm -pthread
+// #cgo darwin LDFLAGS: -lzbar -lpng -ljpeg -lz -lm -pthread
 // #include <stdio.h>
 // #include <stdlib.h>
 // #include <png.h>
@@ -45,8 +46,6 @@ func GetDataFromPNG(imgUrl string) (results []Result, err error) {
 		return
 	}
 
-	//defer C.free(raw)
-
 	image := C.zbar_image_create()
 
 	defer C.zbar_image_destroy(image)
@@ -54,8 +53,8 @@ func GetDataFromPNG(imgUrl string) (results []Result, err error) {
 	C.zbar_image_set_format(image, C.ulong(808466521))
 	C.zbar_image_set_size(image, C.uint(width), C.uint(height))
 
-	f := C.zbar_image_set_data_callback(C.zbar_image_free_data)
-	C.zbar_image_set_data(image, raw, C.ulong(width*height), f)
+
+	C.zbar_image_set_data(image, raw, C.ulong(width*height), nil)
 
 	C.zbar_scan_image(scanner, image)
 
