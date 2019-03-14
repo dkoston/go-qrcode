@@ -1,6 +1,8 @@
 go-remoteqr
 =========
 
+[![CircleCI](https://circleci.com/gh/dkoston/go-remoteqr.svg?style=svg)](https://circleci.com/gh/dkoston/go-remoteqr)
+
 A golang convenience wrapper around [zbar](http://zbar.sourceforge.net/), which will get a remote QR code image and process it.
 
 ## Requirements 
