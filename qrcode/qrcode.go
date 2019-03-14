@@ -53,7 +53,6 @@ func GetDataFromPNG(imgUrl string) (results []Result, err error) {
 	C.zbar_image_set_format(image, C.ulong(808466521))
 	C.zbar_image_set_size(image, C.uint(width), C.uint(height))
 
-
 	C.zbar_image_set_data(image, raw, C.ulong(width*height), nil)
 
 	C.zbar_scan_image(scanner, image)
@@ -73,7 +72,7 @@ func GetDataFromPNG(imgUrl string) (results []Result, err error) {
 	return
 }
 
-func GetPNGFromWeb(imgUrl string) (imgPath string, err error){
+func GetPNGFromWeb(imgUrl string) (imgPath string, err error) {
 	imgResponse, err := client.Get(imgUrl)
 	defer imgResponse.Body.Close()
 	if err != nil {
@@ -85,7 +84,7 @@ func GetPNGFromWeb(imgUrl string) (imgPath string, err error){
 		return imgPath, err
 	}
 
-	imgPath = fmt.Sprintf("%s.png",u.String())
+	imgPath = fmt.Sprintf("%s.png", u.String())
 
 	f, err := os.Create(imgPath)
 	defer f.Close()
