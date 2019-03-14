@@ -11,6 +11,11 @@ import "C"
 import (
 	"errors"
 	"fmt"
+	"github.com/satori/go.uuid"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"time"
 	"unsafe"
 )
 
@@ -19,7 +24,12 @@ type Result struct {
 	Data       string
 }
 
-func GetDataFromPNG(pngPath string) (results []Result, err error) {
+var client = http.Client{
+	Timeout: 5 * time.Second,
+}
+
+func GetDataFromPNG(imgUrl string) (results []Result, err error) {
+	pngPath, err := GetPNGFromWeb(imgUrl)
 
 	pth := C.CString(pngPath)
 	scanner := C.zbar_image_scanner_create()
@@ -59,5 +69,37 @@ func GetDataFromPNG(pngPath string) (results []Result, err error) {
 		results = append(results, Result{symbolType, dataString})
 	}
 
+	err = os.Remove(pngPath)
+
 	return
+}
+
+func GetPNGFromWeb(imgUrl string) (imgPath string, err error){
+	imgResponse, err := client.Get(imgUrl)
+	defer imgResponse.Body.Close()
+	if err != nil {
+		return imgPath, err
+	}
+
+	u, err := uuid.NewV4()
+	if err != nil {
+		return imgPath, err
+	}
+
+	imgPath = fmt.Sprintf("%s.png",u.String())
+
+	f, err := os.Create(imgPath)
+	defer f.Close()
+	if err != nil {
+		return imgPath, err
+	}
+
+	body, err := ioutil.ReadAll(imgResponse.Body)
+	if err != nil {
+		return imgPath, err
+	}
+
+	err = ioutil.WriteFile(imgPath, body, 0644)
+
+	return imgPath, err
 }

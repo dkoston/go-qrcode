@@ -1,7 +1,7 @@
-go-qrcode
+go-remoteqr
 =========
 
-A (very) light golang convenience wrapper around [zbar](http://zbar.sourceforge.net/), used for qr code processing.
+A golang convenience wrapper around [zbar](http://zbar.sourceforge.net/), which will get a remote QR code image and process it.
 
 ## Requirements 
 
@@ -10,9 +10,15 @@ To compile this package requires the zbar header files which can be installed on
 sudo apt-get install libzbar-dev
 ```
 
+or on OS X with:
+
+```
+brew install zbar
+```
+
 Go get the library:
 ```
-go get github.com/shezadkhan137/go-qrcode/qrcode
+go get github.com/dkoston/go-remoteqr/qrcode
 ```
 
 ## Usage (Currently under development)
@@ -20,13 +26,15 @@ go get github.com/shezadkhan137/go-qrcode/qrcode
 It currently only supports extracting data from a PNG Image. Example Usage:
 
 ```go
+package main
+
 import (
     "fmt"
-    "github.com/shezadkhan137/go-qrcode/qrcode"
+    "github.com/dkoston/go-remoteqr/qrcode"
 )
 
 func main() {
-    results, err := qrcode.GetDataFromPNG("path/to/image.png")
+    results, err := qrcode.GetDataFromPNG("https://domain.com/path/to/image.png")
     if err != nil {
         panic(err)
     }
@@ -45,10 +53,7 @@ Building a staticlly linked binary with cgo dependencies can be a little fragile
 go build -ldflags "-linkmode external -extldflags -static"
 ```
 
-## TODO
-
-+ Add support for extrating qr data from video via V4L2
-+ Add support for other image types
+## Thanks
 
 
-
+Thanks to https://github.com/shezadkhan137/go-qrcode as I forked your wrapper.

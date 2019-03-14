@@ -3,14 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/shezadkhan137/go-qrcode/qrcode"
+	"github.com/dkoston/go-remoteqr/qrcode"
 )
 
 var image *string
 
 //go build -o test -ldflags "-linkmode external -extldflags -static"
 func init() {
-	image = flag.String("i", "", "image path")
+	image = flag.String("i", "", "image url")
 }
 
 func main() {
